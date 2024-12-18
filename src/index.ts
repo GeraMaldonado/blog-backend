@@ -1,0 +1,1 @@
+console.log("Usando TypeScript")
