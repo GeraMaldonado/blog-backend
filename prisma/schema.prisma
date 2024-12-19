@@ -13,11 +13,49 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Usuarios {
-  id             Int      @id @default(autoincrement())
-  nombre         String
-  nickname       String   @unique
-  email          String   @unique @db.VarChar(100)
+model Usuario {
+  id             Int          @id @default(autoincrement())
+  nombre         String       @db.VarChar(100)
+  nickname       String       @unique @db.VarChar(50)
+  email          String       @unique @db.VarChar(100)
   password       String
+  fecha_creacion DateTime     @default(now())
+  posts          Post[]
+  comentarios    Comentario[]
+}
+
+model Post {
+  id                Int          @id @default(autoincrement())
+  titulo            String       @db.VarChar(150)
+  contenido         String?
+  fecha_publicacion DateTime     @default(now())
+  usuario           Usuario      @relation(fields: [usuario_id], references: [id])
+  usuario_id        Int
+  categoria         Categoria?   @relation(fields: [categoria_id], references: [id])
+  categoria_id      Int?
+  comentarios       Comentario[]
+  etiquetas         Etiqueta[]
+}
+
+model Categoria {
+  id          Int    @id @default(autoincrement())
+  nombre      String @db.VarChar(100)
+  descripcion String
+  posts       Post[]
+}
+
+model Comentario {
+  id             Int      @id @default(autoincrement())
+  contenido      String
   fecha_creacion DateTime @default(now())
+  usuario        Usuario  @relation(fields: [usuario_id], references: [id])
+  usuario_id     Int
+  post           Post     @relation(fields: [post_id], references: [id])
+  post_id        Int
+}
+
+model Etiqueta {
+  id     Int    @id @default(autoincrement())
+  nombre String @db.VarChar(100)
+  posts  Post[]
 }
