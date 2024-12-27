@@ -1,8 +1,10 @@
 {
   "name": "blog-backend",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "build/index.js",
   "scripts": {
+    "start": "node .",
+    "build": "tsc",
     "dev": "ts-node-dev --respawn src/index.ts"
   },
   "keywords": [],
