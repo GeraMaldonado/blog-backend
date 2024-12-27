@@ -5,7 +5,9 @@
   "scripts": {
     "start": "node .",
     "build": "tsc",
-    "dev": "ts-node-dev --respawn src/index.ts"
+    "dev": "ts-node-dev --respawn src/index.ts",
+    "test": "jest"
+    
   },
   "keywords": [],
   "author": "",
