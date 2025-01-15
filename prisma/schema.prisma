@@ -14,7 +14,7 @@ datasource db {
 }
 
 model Usuario {
-  id             Int          @id @default(autoincrement())
+  id             String       @id
   nombre         String       @db.VarChar(100)
   nickname       String       @unique @db.VarChar(50)
   email          String       @unique @db.VarChar(100)
@@ -25,37 +25,37 @@ model Usuario {
 }
 
 model Post {
-  id                Int          @id @default(autoincrement())
+  id                String       @id
   titulo            String       @db.VarChar(150)
   contenido         String?
   fecha_publicacion DateTime     @default(now())
   usuario           Usuario      @relation(fields: [usuario_id], references: [id])
-  usuario_id        Int
+  usuario_id        String
   categoria         Categoria?   @relation(fields: [categoria_id], references: [id])
-  categoria_id      Int?
+  categoria_id      String?
   comentarios       Comentario[]
   etiquetas         Etiqueta[]
 }
 
 model Categoria {
-  id          Int    @id @default(autoincrement())
+  id          String @id @default(uuid())
   nombre      String @db.VarChar(100)
   descripcion String
   posts       Post[]
 }
 
 model Comentario {
-  id             Int      @id @default(autoincrement())
+  id             String   @id
   contenido      String
   fecha_creacion DateTime @default(now())
   usuario        Usuario  @relation(fields: [usuario_id], references: [id])
-  usuario_id     Int
+  usuario_id     String
   post           Post     @relation(fields: [post_id], references: [id])
-  post_id        Int
+  post_id        String
 }
 
 model Etiqueta {
-  id     Int    @id @default(autoincrement())
+  id     String @id @default(uuid())
   nombre String @db.VarChar(100)
   posts  Post[]
 }

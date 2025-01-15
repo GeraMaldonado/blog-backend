@@ -1,6 +1,6 @@
 -- CreateTable
 CREATE TABLE `Usuario` (
-    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `id` VARCHAR(191) NOT NULL,
     `nombre` VARCHAR(100) NOT NULL,
     `nickname` VARCHAR(50) NOT NULL,
     `email` VARCHAR(100) NOT NULL,
@@ -14,19 +14,19 @@ CREATE TABLE `Usuario` (
 
 -- CreateTable
 CREATE TABLE `Post` (
-    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `id` VARCHAR(191) NOT NULL,
     `titulo` VARCHAR(150) NOT NULL,
     `contenido` VARCHAR(191) NULL,
     `fecha_publicacion` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-    `usuario_id` INTEGER NOT NULL,
-    `categoria_id` INTEGER NULL,
+    `usuario_id` VARCHAR(191) NOT NULL,
+    `categoria_id` VARCHAR(191) NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
 CREATE TABLE `Categoria` (
-    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `id` VARCHAR(191) NOT NULL,
     `nombre` VARCHAR(100) NOT NULL,
     `descripcion` VARCHAR(191) NOT NULL,
 
@@ -35,18 +35,18 @@ CREATE TABLE `Categoria` (
 
 -- CreateTable
 CREATE TABLE `Comentario` (
-    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `id` VARCHAR(191) NOT NULL,
     `contenido` VARCHAR(191) NOT NULL,
     `fecha_creacion` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-    `usuario_id` INTEGER NOT NULL,
-    `post_id` INTEGER NOT NULL,
+    `usuario_id` VARCHAR(191) NOT NULL,
+    `post_id` VARCHAR(191) NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
 CREATE TABLE `Etiqueta` (
-    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `id` VARCHAR(191) NOT NULL,
     `nombre` VARCHAR(100) NOT NULL,
 
     PRIMARY KEY (`id`)
@@ -54,8 +54,8 @@ CREATE TABLE `Etiqueta` (
 
 -- CreateTable
 CREATE TABLE `_EtiquetaToPost` (
-    `A` INTEGER NOT NULL,
-    `B` INTEGER NOT NULL,
+    `A` VARCHAR(191) NOT NULL,
+    `B` VARCHAR(191) NOT NULL,
 
     UNIQUE INDEX `_EtiquetaToPost_AB_unique`(`A`, `B`),
     INDEX `_EtiquetaToPost_B_index`(`B`)
