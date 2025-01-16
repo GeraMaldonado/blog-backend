@@ -4,3 +4,4 @@ import userController from './users.controller'
 export const usersRouter = Router()
 
 usersRouter.get('/', userController.getAllUsers)
+usersRouter.post('/', userController.createUser)
