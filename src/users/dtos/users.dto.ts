@@ -9,4 +9,5 @@ export interface IUser {
   comentarios?: string
 }
 
-export type CreateUserDTO = Pick<IUser, 'id' | 'nombre' | 'nickname' | 'email' | 'password'>
+export type CreateUserDTO = Pick<IUser, 'nombre' | 'nickname' | 'email' | 'password'>
+export type UserDTO = Omit<IUser, 'password'>
