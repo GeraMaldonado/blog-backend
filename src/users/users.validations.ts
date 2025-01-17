@@ -1,5 +1,5 @@
 import z from 'zod'
-import { ValidationError } from '../errors/error'
+import { ValidationError } from '../errors/customizedError'
 
 const User = z.object({
   nombre: z.string().min(1, 'nombre is required').max(150, 'nombre is too long'),
