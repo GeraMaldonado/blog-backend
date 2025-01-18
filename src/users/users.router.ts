@@ -6,3 +6,4 @@ export const usersRouter = Router()
 
 usersRouter.get('/', userController.getAllUsers)
 usersRouter.post('/', asyncHandler(userController.createUser))
+usersRouter.get('/:id', asyncHandler(userController.getUserById))

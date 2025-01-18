@@ -14,7 +14,14 @@ const createUser = async (req: Request, res: Response): Promise<void> => {
   res.json({ result })
 }
 
+const getUserById = async (req: Request, res: Response): Promise<void> => {
+  const { id } = req.params
+  const result = await usersModel.getUserById(id)
+  res.json({ result })
+}
+
 export default {
   getAllUsers,
-  createUser
+  createUser,
+  getUserById
 }
