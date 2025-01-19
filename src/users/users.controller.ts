@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import usersModel from './users.model'
 import { UserDTO } from './dtos/users.dto'
-import { validateUser } from './users.validations'
+import { validateUser, validatePatialUser } from './users.validations'
 
 const getAllUsers = async (_req: Request, res: Response): Promise<void> => {
   const users: UserDTO[] = await usersModel.getAllUsers()
@@ -20,8 +20,16 @@ const getUserById = async (req: Request, res: Response): Promise<void> => {
   res.json({ result })
 }
 
+const updateUserById = async (req: Request, res: Response): Promise<void> => {
+  const { id } = req.params
+  const updateData = validatePatialUser(req.body)
+  const result = await usersModel.updateUserById(id, updateData)
+  res.json({ result })
+}
+
 export default {
   getAllUsers,
   createUser,
-  getUserById
+  getUserById,
+  updateUserById
 }

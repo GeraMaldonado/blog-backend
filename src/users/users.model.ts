@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client'
 import { randomUUID } from 'crypto'
-import { CreateUserDTO, UserDTO } from './dtos/users.dto'
+import { CreateUserDTO, UserDTO, UpdateUserDTO } from './dtos/users.dto'
 
 const prisma = new PrismaClient()
 
@@ -38,8 +38,18 @@ const createUser = async (newUser: CreateUserDTO): Promise<string> => {
   return id
 }
 
+const updateUserById = async (id: string, updateUser: UpdateUserDTO): Promise<string> => {
+  await prisma.usuario.update({
+    where: { id },
+    data: updateUser
+  })
+
+  return `User ${id} updated`
+}
+
 export default {
   getAllUsers,
   createUser,
-  getUserById
+  getUserById,
+  updateUserById
 }
