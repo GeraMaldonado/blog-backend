@@ -9,11 +9,14 @@ const User = z.object({
 })
 
 export type ValidateUser = z.infer<typeof User>
+export type PartialValidateUser = z.infer<ReturnType<typeof User.partial>>
 
-export const validateUser = (input: any): ValidateUser => {
-  const result = User.safeParse(input)
-
+const validateShcema = <T>(schema: z.ZodSchema<T>, input: unknown): T => {
+  const result = schema.safeParse(input)
   if (!result.success) throw new ValidationError(`${result.error.errors.map(err => err.message).join(', ')}`)
-
   return result.data
 }
+
+export const validateUser = (input: unknown): ValidateUser => validateShcema(User, input)
+
+export const validatePatialUser = (input: unknown): PartialValidateUser => validateShcema(User.partial(), input)
