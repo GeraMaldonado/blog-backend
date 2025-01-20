@@ -27,9 +27,16 @@ const updateUserById = async (req: Request, res: Response): Promise<void> => {
   res.json({ result })
 }
 
+const deleteUserById = async (req: Request, res: Response): Promise<void> => {
+  const { id } = req.params
+  const deletUser = await usersModel.deleteUserById(id)
+  res.json({ deletUser })
+}
+
 export default {
   getAllUsers,
   createUser,
   getUserById,
-  updateUserById
+  updateUserById,
+  deleteUserById
 }

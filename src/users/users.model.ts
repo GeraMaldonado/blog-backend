@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client'
-import { randomUUID } from 'crypto'
+import { randomUUID } from 'node:crypto'
 import { CreateUserDTO, UserDTO, UpdateUserDTO } from './dtos/users.dto'
 
 const prisma = new PrismaClient()
@@ -43,13 +43,18 @@ const updateUserById = async (id: string, updateUser: UpdateUserDTO): Promise<st
     where: { id },
     data: updateUser
   })
-
   return `User ${id} updated`
+}
+
+const deleteUserById = async (id: string): Promise<string> => {
+  await prisma.usuario.delete({ where: { id } })
+  return `User ${id} deleted`
 }
 
 export default {
   getAllUsers,
   createUser,
   getUserById,
-  updateUserById
+  updateUserById,
+  deleteUserById
 }
