@@ -9,3 +9,4 @@ const createErrorFactory = (name: string): new (message: string) => Error => {
 }
 
 export const ValidationError = createErrorFactory('ValidationError')
+export const NotFoundError = createErrorFactory('NotFoundError')
