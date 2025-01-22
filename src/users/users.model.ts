@@ -1,8 +1,13 @@
 import { PrismaClient } from '@prisma/client'
 import { randomUUID } from 'node:crypto'
 import { CreateUserDTO, UserDTO, UpdateUserDTO } from './dtos/users.dto'
+import { NotFoundError } from '../errors/customizedError'
 
 const prisma = new PrismaClient()
+
+const validateUserExistance = async (id: string): Promise<void> => {
+  if (await prisma.usuario.findUnique({ where: { id } }) == null) throw new NotFoundError('user not found')
+}
 
 const getAllUsers = async (): Promise<UserDTO[]> => {
   const allUsers: UserDTO[] = await prisma.usuario.findMany({
@@ -17,7 +22,8 @@ const getAllUsers = async (): Promise<UserDTO[]> => {
   return allUsers
 }
 
-const getUserById = async (id: string): Promise<UserDTO> => {
+const getUserById = async (id: string): Promise<UserDTO | null> => {
+  await validateUserExistance(id)
   const user = await prisma.usuario.findUnique({
     select: {
       id: true,
@@ -28,7 +34,6 @@ const getUserById = async (id: string): Promise<UserDTO> => {
     },
     where: { id }
   })
-  if (user == null) throw new Error('user not found')
   return user
 }
 
@@ -39,6 +44,7 @@ const createUser = async (newUser: CreateUserDTO): Promise<string> => {
 }
 
 const updateUserById = async (id: string, updateUser: UpdateUserDTO): Promise<string> => {
+  await validateUserExistance(id)
   await prisma.usuario.update({
     where: { id },
     data: updateUser
@@ -47,6 +53,7 @@ const updateUserById = async (id: string, updateUser: UpdateUserDTO): Promise<st
 }
 
 const deleteUserById = async (id: string): Promise<string> => {
+  await validateUserExistance(id)
   await prisma.usuario.delete({ where: { id } })
   return `User ${id} deleted`
 }
