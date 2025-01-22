@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client'
 import { randomUUID } from 'node:crypto'
 import { CreateUserDTO, UserDTO, UpdateUserDTO } from './dtos/users.dto'
-import { NotFoundError } from '../errors/customizedError'
+import { ConflictError, NotFoundError } from '../errors/customizedError'
 
 const prisma = new PrismaClient()
 
@@ -20,8 +20,8 @@ const validateUniqueFields = async (user: UserDTO | UpdateUserDTO): Promise<void
   })
 
   if (existingUser != null) {
-    if (existingUser.nickname === user.nickname) throw new Error('nickname already in use')
-    if (existingUser.email === user.email) throw new Error('email already in use')
+    if (existingUser.nickname === user.nickname) throw new ConflictError('nickname already in use')
+    if (existingUser.email === user.email) throw new ConflictError('email already in use')
   }
 }
 
