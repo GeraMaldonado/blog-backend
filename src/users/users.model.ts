@@ -9,6 +9,22 @@ const validateUserExistance = async (id: string): Promise<void> => {
   if (await prisma.usuario.findUnique({ where: { id } }) == null) throw new NotFoundError('user not found')
 }
 
+const validateUniqueFields = async (user: UserDTO | UpdateUserDTO): Promise<void> => {
+  const existingUser = await prisma.usuario.findFirst({
+    where: {
+      OR: [
+        { nickname: user.nickname },
+        { email: user.email }
+      ]
+    }
+  })
+
+  if (existingUser != null) {
+    if (existingUser.nickname === user.nickname) throw new Error('nickname already in use')
+    if (existingUser.email === user.email) throw new Error('email already in use')
+  }
+}
+
 const getAllUsers = async (): Promise<UserDTO[]> => {
   const allUsers: UserDTO[] = await prisma.usuario.findMany({
     select: {
@@ -38,6 +54,7 @@ const getUserById = async (id: string): Promise<UserDTO | null> => {
 }
 
 const createUser = async (newUser: CreateUserDTO): Promise<string> => {
+  await validateUniqueFields(newUser)
   const id: string = randomUUID()
   await prisma.usuario.create({ data: { id, ...newUser } })
   return id
@@ -45,6 +62,7 @@ const createUser = async (newUser: CreateUserDTO): Promise<string> => {
 
 const updateUserById = async (id: string, updateUser: UpdateUserDTO): Promise<string> => {
   await validateUserExistance(id)
+  await validateUniqueFields(updateUser)
   await prisma.usuario.update({
     where: { id },
     data: updateUser
