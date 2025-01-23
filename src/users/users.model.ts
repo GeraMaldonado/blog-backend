@@ -2,6 +2,7 @@ import { PrismaClient } from '@prisma/client'
 import { randomUUID } from 'node:crypto'
 import { CreateUserDTO, UserDTO, UpdateUserDTO } from './dtos/users.dto'
 import { ConflictError, NotFoundError } from '../errors/customizedError'
+import { encryptPassword } from '../utils'
 
 const prisma = new PrismaClient()
 
@@ -56,6 +57,7 @@ const getUserById = async (id: string): Promise<UserDTO | null> => {
 const createUser = async (newUser: CreateUserDTO): Promise<string> => {
   await validateUniqueFields(newUser)
   const id: string = randomUUID()
+  newUser.password = await encryptPassword(newUser.password)
   await prisma.usuario.create({ data: { id, ...newUser } })
   return id
 }
@@ -63,6 +65,7 @@ const createUser = async (newUser: CreateUserDTO): Promise<string> => {
 const updateUserById = async (id: string, updateUser: UpdateUserDTO): Promise<string> => {
   await validateUserExistance(id)
   await validateUniqueFields(updateUser)
+  if (updateUser.password != null) updateUser.password = await encryptPassword(updateUser.password)
   await prisma.usuario.update({
     where: { id },
     data: updateUser
