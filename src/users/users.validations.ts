@@ -4,7 +4,7 @@ import { ValidationError } from '../errors/customizedError'
 const User = z.object({
   nombre: z.string().min(1, 'nombre is required').max(150, 'nombre is too long'),
   nickname: z.string().min(1, 'nickname is required').max(50, 'nickname is too long'),
-  password: z.string().min(20, 'password must be al least 20 characters'),
+  password: z.string().min(10, 'password must be al least 10 characters'),
   email: z.string().email('invalid email format')
 })
 
