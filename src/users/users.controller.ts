@@ -1,42 +1,42 @@
 import { Request, Response } from 'express'
-import usersModel from './users.model'
 import { UserDTO } from './dtos/users.dto'
 import { validateUser, validatePatialUser } from './users.validations'
+import { IUserModel } from './IUserModel'
 
-const getAllUsers = async (_req: Request, res: Response): Promise<void> => {
-  const users: UserDTO[] = await usersModel.getAllUsers()
-  res.json(users)
-}
+export class UserController {
+  private readonly userModel: IUserModel
 
-const createUser = async (req: Request, res: Response): Promise<void> => {
-  const { nombre, nickname, password, email } = validateUser(req.body)
-  const result = await usersModel.createUser({ nombre, nickname, password, email })
-  res.json({ result })
-}
+  constructor ({ userModel }: { userModel: IUserModel }) {
+    this.userModel = userModel
+  }
 
-const getUserById = async (req: Request, res: Response): Promise<void> => {
-  const { id } = req.params
-  const result = await usersModel.getUserById(id)
-  res.json({ result })
-}
+  getAllUsers = async (_req: Request, res: Response): Promise<void> => {
+    const users: UserDTO[] = await this.userModel.getAllUsers()
+    res.json(users)
+  }
 
-const updateUserById = async (req: Request, res: Response): Promise<void> => {
-  const { id } = req.params
-  const updateData = validatePatialUser(req.body)
-  const result = await usersModel.updateUserById(id, updateData)
-  res.json({ result })
-}
+  createUser = async (req: Request, res: Response): Promise<void> => {
+    const { nombre, nickname, password, email } = validateUser(req.body)
+    const result = await this.userModel.createUser({ nombre, nickname, password, email })
+    res.json({ result })
+  }
 
-const deleteUserById = async (req: Request, res: Response): Promise<void> => {
-  const { id } = req.params
-  const deletUser = await usersModel.deleteUserById(id)
-  res.json({ deletUser })
-}
+  getUserById = async (req: Request, res: Response): Promise<void> => {
+    const { id } = req.params
+    const result = await this.userModel.getUserById(id)
+    res.json({ result })
+  }
 
-export default {
-  getAllUsers,
-  createUser,
-  getUserById,
-  updateUserById,
-  deleteUserById
+  updateUserById = async (req: Request, res: Response): Promise<void> => {
+    const { id } = req.params
+    const updateData = validatePatialUser(req.body)
+    const result = await this.userModel.updateUserById(id, updateData)
+    res.json({ result })
+  }
+
+  deleteUserById = async (req: Request, res: Response): Promise<void> => {
+    const { id } = req.params
+    const deleteUser = await this.userModel.deleteUserById(id)
+    res.json({ deleteUser })
+  }
 }
