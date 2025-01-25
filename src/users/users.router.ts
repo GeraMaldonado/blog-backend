@@ -1,11 +1,17 @@
 import { Router } from 'express'
-import userController from './users.controller'
+import { UserController } from './users.controller'
 import { asyncHandler } from '../errors/asyncHandler'
+import { IUserModel } from './IUserModel'
 
-export const usersRouter = Router()
+export const createUserRouter = ({ userModel }: { userModel: IUserModel }): Router => {
+  const usersRouter = Router()
 
-usersRouter.get('/', userController.getAllUsers)
-usersRouter.post('/', asyncHandler(userController.createUser))
-usersRouter.get('/:id', asyncHandler(userController.getUserById))
-usersRouter.patch('/:id', asyncHandler(userController.updateUserById))
-usersRouter.delete('/:id', asyncHandler(userController.deleteUserById))
+  const userController = new UserController({ userModel })
+
+  usersRouter.get('/', userController.getAllUsers)
+  usersRouter.post('/', asyncHandler(userController.createUser))
+  usersRouter.get('/:id', asyncHandler(userController.getUserById))
+  usersRouter.patch('/:id', asyncHandler(userController.updateUserById))
+  usersRouter.delete('/:id', asyncHandler(userController.deleteUserById))
+  return usersRouter
+}
