@@ -11,7 +11,7 @@ export const createApp = ({ userModel }: { userModel: IUserModel }): Application
 
   app.use(express.json())
 
-  app.use('/api', createUserRouter({ userModel }))
+  app.use('/api/user', createUserRouter({ userModel }))
 
   app.use(errorHandler)
 
