@@ -1,17 +1,19 @@
-import express from 'express'
+import express, { Application } from 'express'
 import { createUserRouter } from './users/users.router'
 import { errorHandler } from './middleware/errorHandler'
 import { PORT } from './config'
-import { UserModel } from './users/users.model'
+import { IUserModel } from './users/IUserModel'
 
-const app = express()
+export const createApp = ({ userModel }: { userModel: IUserModel }): Application => {
+  const app = express()
 
-app.use(express.json())
+  app.set('port', PORT)
 
-app.set('port', PORT)
+  app.use(express.json())
 
-app.use('/api', createUserRouter({ userModel: UserModel }))
+  app.use('/api', createUserRouter({ userModel }))
 
-app.use(errorHandler)
+  app.use(errorHandler)
 
-export default app
+  return app
+}
