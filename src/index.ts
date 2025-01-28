@@ -1,4 +1,7 @@
-import app from './app'
+import { createApp } from './app'
+import { UserModel } from './users/users.model'
+
+const app = createApp({ userModel: UserModel })
 
 const main = (): void => {
   app.listen(app.get('port'), (): void => {
