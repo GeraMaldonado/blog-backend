@@ -33,16 +33,14 @@ describe('User Endopints', () => {
       const newUser = { ...user, email: 'gmaldonadofelix@hotmail.com' }
       const response = await request(app).post(url).send(newUser)
       expect(response.status).toBe(409)
-      expect(response.body.type).toEqual('ConflictError')
-      expect(response.body.message).toEqual('nickname already is use')
+      expect(response.body).toEqual({ type: 'ConflictError', message: 'nickname already is use' })
     })
 
     it(`POST ${url} should fail for repeated email`, async () => {
       const newUser = { ...user, nickname: 'Owl' }
       const response = await request(app).post(url).send(newUser)
       expect(response.status).toBe(409)
-      expect(response.body.type).toEqual('ConflictError')
-      expect(response.body.message).toEqual('email already in use')
+      expect(response.body).toEqual({ type: 'ConflictError', message: 'email already in use' })
     })
 
     it(`POST ${url} should fail for field empty`, async () => {
