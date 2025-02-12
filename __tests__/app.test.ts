@@ -6,6 +6,7 @@ import { UserDTO } from '../src/users/dtos/users.dto'
 const app = createApp({ userModel: UserModelTest })
 const url: string = '/api/users'
 const user = { nombre: 'Gerardo Maldonado', password: 'passwordSeguro123', email: 'gmaldonadofelix@gmail.com', nickname: 'tHOwl953' }
+let id: string
 
 describe('User Endopints', () => {
   describe('GET All users', () => {
@@ -25,6 +26,7 @@ describe('User Endopints', () => {
     it(`POST ${url} should create a user`, async () => {
       const newUser = { ...user }
       const response = await request(app).post(url).send(newUser)
+      id = response.body.result
       expect(response.status).toBe(201)
       expect(typeof response.body.result).toBe('string')
     })
@@ -45,9 +47,19 @@ describe('User Endopints', () => {
 
     it(`POST ${url} should fail for field empty`, async () => {
       const newUser = { ...user, nombre: '' }
-      const result = await request(app).post(url).send(newUser)
-      expect(result.status).toBe(400)
-      expect(result.body).toEqual({ type: 'ValidationError', message: 'nombre is required' })
+      const response = await request(app).post(url).send(newUser)
+      expect(response.status).toBe(400)
+      expect(response.body).toEqual({ type: 'ValidationError', message: 'nombre is required' })
+    })
+  })
+
+  describe('GET user by id', () => {
+    it(`GET ${url} sould return a userb by id`, async () => {
+      const response = await request(app).get(`${url}/${id}`)
+      expect(response.status).toBe(200)
+      expect(response.body.result).toHaveProperty('nickname')
+      expect(response.body.result).toHaveProperty('email')
+      expect(response.body.result).not.toHaveProperty('password')
     })
   })
 })
