@@ -44,5 +44,12 @@ describe('User Endopints', () => {
       expect(response.body.type).toEqual('ConflictError')
       expect(response.body.message).toEqual('email already in use')
     })
+
+    it(`POST ${url} should fail for field empty`, async () => {
+      const newUser = { ...user, nombre: '' }
+      const result = await request(app).post(url).send(newUser)
+      expect(result.status).toBe(400)
+      expect(result.body).toEqual({ type: 'ValidationError', message: 'nombre is required' })
+    })
   })
 })
