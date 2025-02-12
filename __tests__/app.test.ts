@@ -5,7 +5,7 @@ import { UserDTO } from '../src/users/dtos/users.dto'
 
 const app = createApp({ userModel: UserModelTest })
 const url: string = '/api/users'
-let id: string
+const newUser = { nombre: 'Gerardo Maldonado', password: 'passwordSeguro123', email: 'gmaldonadofelix@gmail.com', nickname: 'tHOwl953' }
 
 describe('User Endopints', () => {
   describe('GET All users', () => {
@@ -22,11 +22,16 @@ describe('User Endopints', () => {
   })
   describe('POST user', () => {
     it(`POST ${url} should create a user`, async () => {
-      const newUser = { nombre: 'Gerardo Maldonado', password: 'passwordSeguro123', email: 'gmaldonadofelix@gmail.com', nickname: 'tHOwl953' }
       const response = await request(app).post(url).send(newUser)
-      id = response.body.result
       expect(response.status).toBe(201)
       expect(typeof response.body.result).toBe('string')
+    })
+    it(`POST ${url} should fail for repeated user`, async () => {
+      newUser.email = 'gmaldonadofelix@hotmail.com'
+      const response = await request(app).post(url).send(newUser)
+      expect(response.status).toBe(409)
+      expect(response.body.type).toEqual('ConflictError')
+      expect(response.body.message).toEqual('nickname already is use')
     })
   })
 })
