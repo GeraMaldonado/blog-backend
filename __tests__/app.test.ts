@@ -54,7 +54,7 @@ describe('User Endopints', () => {
   })
 
   describe('GET user by id', () => {
-    it(`GET ${url} should return a user by id`, async () => {
+    it(`GET ${url}/:id should return a user by id`, async () => {
       const response = await request(app).get(`${url}/${id}`)
       expect(response.status).toBe(200)
       expect(response.body.result).toHaveProperty('nickname')
@@ -62,11 +62,23 @@ describe('User Endopints', () => {
       expect(response.body.result).not.toHaveProperty('password')
     })
 
-    it(`GET ${url} should fail for non-existent id`, async () => {
+    it(`GET ${url}/:id should fail for non-existent id`, async () => {
       const response = await request(app).get(`${url}/28`)
-      console.log(response.body)
       expect(response.status).toBe(404)
       expect(response.body).toEqual({ type: 'NotFoundError', message: 'user not found' })
+    })
+  })
+
+  describe('PATCH user by id', () => {
+    it(`PATCH ${url}/:id should modify the user`, async () => {
+      const oldUser = await request(app).get(`${url}/${id}`)
+      const response = await request(app).patch(`${url}/${id}`).send({ nombre: 'Gerardo' })
+      const modifiedUser = await request(app).get(`${url}/${id}`)
+      expect(response.status).toBe(200)
+      expect(modifiedUser.body.result.nickname).toBe(oldUser.body.result.nickname)
+      expect(modifiedUser.body.result.id).toBe(oldUser.body.result.id)
+      expect(modifiedUser.body.result.nombre).not.toBe(oldUser.body.result.nombre)
+      expect(modifiedUser.body.result.email).toBe(oldUser.body.result.email)
     })
   })
 })
