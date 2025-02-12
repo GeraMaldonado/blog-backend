@@ -25,8 +25,6 @@ describe('User Endopints', () => {
       const newUser = { nombre: 'Gerardo Maldonado', password: 'passwordSeguro123', email: 'gmaldonadofelix@gmail.com', nickname: 'tHOwl953' }
       const response = await request(app).post(url).send(newUser)
       id = response.body.result
-      console.log(id)
-
       expect(response.status).toBe(201)
       expect(typeof response.body.result).toBe('string')
     })
