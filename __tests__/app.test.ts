@@ -54,12 +54,19 @@ describe('User Endopints', () => {
   })
 
   describe('GET user by id', () => {
-    it(`GET ${url} sould return a userb by id`, async () => {
+    it(`GET ${url} should return a user by id`, async () => {
       const response = await request(app).get(`${url}/${id}`)
       expect(response.status).toBe(200)
       expect(response.body.result).toHaveProperty('nickname')
       expect(response.body.result).toHaveProperty('email')
       expect(response.body.result).not.toHaveProperty('password')
+    })
+
+    it(`GET ${url} should fail for non-existent id`, async () => {
+      const response = await request(app).get(`${url}/28`)
+      console.log(response.body)
+      expect(response.status).toBe(404)
+      expect(response.body).toEqual({ type: 'NotFoundError', message: 'user not found' })
     })
   })
 })
