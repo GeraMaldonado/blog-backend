@@ -11,7 +11,7 @@ export const UserModelTest: IUserModel = {
   },
   async getUserById (id: string): Promise<UserDTO | null> {
     await this.validateUserExistance(id)
-    return usersDatabase.find(u => u.id === id) ?? null
+    return (usersDatabase.find(u => u.id === id) != null) ? (({ password, ...userWithoutPassword }) => userWithoutPassword)(usersDatabase.find(u => u.id === id)!) : null
   },
   async createUser (newUser: CreateUserDTO): Promise<string> {
     await this.validateUniqueFields(newUser)
