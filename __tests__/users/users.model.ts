@@ -7,7 +7,7 @@ import { encryptPassword } from '../../src/utils'
 
 export const UserModelTest: IUserModel = {
   async getAllUsers (): Promise<UserDTO[]> {
-    return usersDatabase
+    return usersDatabase.map(({ password, ...userWithoutPassword }) => userWithoutPassword)
   },
   async getUserById (id: string): Promise<UserDTO | null> {
     await this.validateUserExistance(id)
