@@ -93,10 +93,19 @@ describe('User Endopints', () => {
       expect(response.body).toEqual({ type: 'ConflictError', message: 'email already in use' })
     })
 
-    it(`PATCH ${url}/: should fail for field empty`, async () => {
+    it(`PATCH ${url}/:id should fail for field empty`, async () => {
       const response = await request(app).patch(`${url}/${id}`).send({ email: ' ' })
       expect(response.status).toBe(400)
       expect(response.body).toEqual({ type: 'ValidationError', message: 'invalid email format' })
+    })
+  })
+
+  describe('DELETE user by id', () => {
+    it(`DELETE ${url}/: should deleted the user`, async () => {
+      const response = await request(app).delete(`${url}/${id}`)
+      const userDeleted = await request(app).get(`${url}/${id}`)
+      expect(response.status).toBe(200)
+      expect(userDeleted.body).toEqual({ type: 'NotFoundError', message: 'user not found' })
     })
   })
 })
