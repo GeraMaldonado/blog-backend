@@ -92,5 +92,11 @@ describe('User Endopints', () => {
       expect(response.status).toBe(409)
       expect(response.body).toEqual({ type: 'ConflictError', message: 'email already in use' })
     })
+
+    it(`PATCH ${url}/: should fail for field empty`, async () => {
+      const response = await request(app).patch(`${url}/${id}`).send({ email: ' ' })
+      expect(response.status).toBe(400)
+      expect(response.body).toEqual({ type: 'ValidationError', message: 'invalid email format' })
+    })
   })
 })
