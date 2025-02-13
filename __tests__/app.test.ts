@@ -32,7 +32,7 @@ describe('User Endopints', () => {
     })
 
     it(`POST ${url} should fail for repeated user`, async () => {
-      const newUser = { ...user, email: 'gmaldonadofelix@hotmail.com' }
+      const newUser = { ...user, email: 'gmaldonadofelix@hotmail.com', nickname: 'MadMax' }
       const response = await request(app).post(url).send(newUser)
       expect(response.status).toBe(409)
       expect(response.body).toEqual({ type: 'ConflictError', message: 'nickname already is use' })
@@ -79,6 +79,12 @@ describe('User Endopints', () => {
       expect(modifiedUser.body.result.id).toBe(oldUser.body.result.id)
       expect(modifiedUser.body.result.nombre).not.toBe(oldUser.body.result.nombre)
       expect(modifiedUser.body.result.email).toBe(oldUser.body.result.email)
+    })
+
+    it(`PATCH ${url}/:id should fail for repeated user`, async () => {
+      const response = await request(app).patch(`${url}/${id}`).send({ nickname: 'MadMax' })
+      expect(response.status).toBe(409)
+      expect(response.body).toEqual({ type: 'ConflictError', message: 'nickname already is use' })
     })
   })
 })
