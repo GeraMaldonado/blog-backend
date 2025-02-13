@@ -107,5 +107,10 @@ describe('User Endopints', () => {
       expect(response.status).toBe(200)
       expect(userDeleted.body).toEqual({ type: 'NotFoundError', message: 'user not found' })
     })
+    it(`DELETE ${url}/: should fail for non-existent id`, async () => {
+      const response = await request(app).delete(`${url}/45`)
+      expect(response.status).toBe(404)
+      expect(response.body).toEqual({ type: 'NotFoundError', message: 'user not found' })
+    })
   })
 })
