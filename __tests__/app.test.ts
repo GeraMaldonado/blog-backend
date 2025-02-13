@@ -86,5 +86,11 @@ describe('User Endopints', () => {
       expect(response.status).toBe(409)
       expect(response.body).toEqual({ type: 'ConflictError', message: 'nickname already is use' })
     })
+
+    it(`PATCH ${url}/:id should fail for repeated email`, async () => {
+      const response = await request(app).patch(`${url}/${id}`).send({ email: 'mrockatansky@email.com' })
+      expect(response.status).toBe(409)
+      expect(response.body).toEqual({ type: 'ConflictError', message: 'email already in use' })
+    })
   })
 })
