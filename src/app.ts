@@ -1,6 +1,6 @@
 import express, { Application } from 'express'
 import { createUserRouter } from './users/users.router'
-import { errorHandler } from './middleware/errorHandler'
+import { errorHandler } from './errors/errorHandler'
 import { PORT } from './config'
 import { IUserModel } from './users/IUserModel'
 
