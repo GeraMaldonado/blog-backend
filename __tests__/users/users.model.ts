@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto'
 import { CreateUserDTO, UpdateUserDTO, UserDTO } from '../../src/users/dtos/users.dto'
-import { IUserModel } from '../../src/users/IUserModel'
+import { IUserModel } from '../../src/interfaces/users/IUserModel'
 import { ConflictError, NotFoundError } from '../../src/errors/customizedError'
 import { usersDatabase } from './users.database'
 import { encryptPassword } from '../../src/utils'

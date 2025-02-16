@@ -2,7 +2,7 @@ import express, { Application } from 'express'
 import { createUserRouter } from './users/users.router'
 import { errorHandler } from './errors/errorHandler'
 import { PORT } from './config'
-import { IUserModel } from './users/IUserModel'
+import { IUserModel } from './interfaces/users/IUserModel'
 
 export const createApp = ({ userModel }: { userModel: IUserModel }): Application => {
   const app = express()

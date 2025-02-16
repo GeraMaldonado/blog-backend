@@ -3,7 +3,7 @@ import { randomUUID } from 'node:crypto'
 import { CreateUserDTO, UserDTO, UpdateUserDTO } from './dtos/users.dto'
 import { ConflictError, NotFoundError } from '../errors/customizedError'
 import { encryptPassword } from '../utils'
-import { IUserModel } from './IUserModel'
+import { IUserModel } from '../interfaces/users/IUserModel'
 
 const prisma = new PrismaClient()
 

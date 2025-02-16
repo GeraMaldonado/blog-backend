@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import { UserDTO } from './dtos/users.dto'
 import { validateUser, validatePatialUser } from './users.validations'
-import { IUserModel } from './IUserModel'
+import { IUserModel } from '../interfaces/users/IUserModel'
 
 export class UserController {
   private readonly userModel: IUserModel

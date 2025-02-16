@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { UserController } from './users.controller'
 import { asyncHandler } from '../errors/asyncHandler'
-import { IUserModel } from './IUserModel'
+import { IUserModel } from '../interfaces/users/IUserModel'
 
 export const createUserRouter = ({ userModel }: { userModel: IUserModel }): Router => {
   const usersRouter = Router()
