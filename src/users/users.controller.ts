@@ -16,8 +16,8 @@ export class UserController {
   }
 
   createUser = async (req: Request, res: Response): Promise<void> => {
-    const { nombre, nickname, password, email } = validateUser(req.body)
-    const result = await this.userModel.createUser({ nombre, nickname, password, email })
+    const { name, username, password, email } = validateUser(req.body)
+    const result = await this.userModel.createUser({ name, username, password, email })
     res.status(201).json({ result })
   }
 

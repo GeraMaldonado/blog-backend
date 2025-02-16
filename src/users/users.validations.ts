@@ -2,8 +2,8 @@ import z from 'zod'
 import { ValidationError } from '../errors/customizedError'
 
 const User = z.object({
-  nombre: z.string().min(1, 'nombre is required').max(150, 'nombre is too long'),
-  nickname: z.string().min(1, 'nickname is required').max(50, 'nickname is too long'),
+  name: z.string().min(1, 'name is required').max(150, 'name is too long'),
+  username: z.string().min(1, 'username is required').max(50, 'username is too long'),
   password: z.string().min(10, 'password must be al least 10 characters'),
   email: z.string().email('invalid email format')
 })

@@ -9,33 +9,33 @@ const prisma = new PrismaClient()
 
 export const UserModel: IUserModel = {
   async validateUserExistance (id: string): Promise<void> {
-    if (await prisma.usuario.findUnique({ where: { id } }) == null) throw new NotFoundError('user not found')
+    if (await prisma.user.findUnique({ where: { id } }) == null) throw new NotFoundError('user not found')
   },
 
   async validateUniqueFields (user: UserDTO | UpdateUserDTO): Promise<void> {
-    const existingUser = await prisma.usuario.findFirst({
+    const existingUser = await prisma.user.findFirst({
       where: {
         OR: [
-          { nickname: user.nickname },
+          { username: user.username },
           { email: user.email }
         ]
       }
     })
 
     if (existingUser != null) {
-      if (existingUser.nickname === user.nickname) throw new ConflictError('nickname already in use')
+      if (existingUser.username === user.username) throw new ConflictError('username already in use')
       if (existingUser.email === user.email) throw new ConflictError('email already in use')
     }
   },
 
   async getAllUsers (): Promise<UserDTO[]> {
-    const allUsers: UserDTO[] = await prisma.usuario.findMany({
+    const allUsers: UserDTO[] = await prisma.user.findMany({
       select: {
         id: true,
-        nombre: true,
-        nickname: true,
+        name: true,
+        username: true,
         email: true,
-        fecha_creacion: true
+        creation_date: true
       }
     })
     return allUsers
@@ -43,13 +43,13 @@ export const UserModel: IUserModel = {
 
   async getUserById (id: string): Promise<UserDTO | null> {
     await this.validateUserExistance(id)
-    const user = await prisma.usuario.findUnique({
+    const user = await prisma.user.findUnique({
       select: {
         id: true,
-        nombre: true,
-        nickname: true,
+        name: true,
+        username: true,
         email: true,
-        fecha_creacion: true
+        creation_date: true
       },
       where: { id }
     })
@@ -60,7 +60,7 @@ export const UserModel: IUserModel = {
     await this.validateUniqueFields(newUser)
     const id: string = randomUUID()
     newUser.password = await encryptPassword(newUser.password)
-    await prisma.usuario.create({ data: { id, ...newUser } })
+    await prisma.user.create({ data: { id, ...newUser } })
     return id
   },
 
@@ -68,7 +68,7 @@ export const UserModel: IUserModel = {
     await this.validateUserExistance(id)
     await this.validateUniqueFields(updateUser)
     if (updateUser.password != null) updateUser.password = await encryptPassword(updateUser.password)
-    await prisma.usuario.update({
+    await prisma.user.update({
       where: { id },
       data: updateUser
     })
@@ -77,7 +77,7 @@ export const UserModel: IUserModel = {
 
   async deleteUserById (id: string): Promise<string> {
     await this.validateUserExistance(id)
-    await prisma.usuario.delete({ where: { id } })
+    await prisma.user.delete({ where: { id } })
     return `User ${id} deleted`
   }
 }

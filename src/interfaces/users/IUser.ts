@@ -1,10 +1,10 @@
 export interface IUser {
   id: string
-  nombre: string
-  nickname: string
+  name: string
+  username: string
   email: string
   password: string
-  fecha_creacion: Date
+  creation_date: Date
   posts?: string
-  comentarios?: string
+  comments?: string
 }

@@ -17,7 +17,7 @@ export const UserModelTest: IUserModel = {
     await this.validateUniqueFields(newUser)
     const id = randomUUID()
     newUser.password = await encryptPassword(newUser.password)
-    usersDatabase.push({ id, fecha_creacion: new Date(), ...newUser })
+    usersDatabase.push({ id, creation_date: new Date(), ...newUser })
     return id
   },
   async updateUserById (id: string, updateUser: UpdateUserDTO): Promise<string> {
@@ -38,7 +38,7 @@ export const UserModelTest: IUserModel = {
     if (usersDatabase.findIndex(u => u.id === id) === -1) throw new NotFoundError('user not found')
   },
   async validateUniqueFields (user: UserDTO | UpdateUserDTO): Promise<void> {
-    if ((usersDatabase.filter(x => x.nickname === user.nickname)).length >= 1) throw new ConflictError('nickname already is use')
+    if ((usersDatabase.filter(x => x.username === user.username)).length >= 1) throw new ConflictError('username already is use')
     if ((usersDatabase.filter(x => x.email === user.email)).length >= 1) throw new ConflictError('email already in use')
   }
 }

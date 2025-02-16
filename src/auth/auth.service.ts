@@ -3,7 +3,7 @@ import { SECRET_JWT_KEY, SECRET_REFRESH_JWT_KEY } from '../config'
 
 export const generateAccessToken = async (user: any): Promise<string> => {
   return jwt.sign(
-    { id: user.id, username: user.nickname },
+    { id: user.id, username: user.username },
     SECRET_JWT_KEY as Secret,
     { expiresIn: '15m' }
   )
