@@ -1,5 +1,5 @@
 import { randomUUID } from 'node:crypto'
-import { IUser } from '../../src/users/dtos/users.dto'
+import { IUser } from '../../src/interfaces/users/IUser'
 
 export const usersDatabase: IUser[] = [
   {
