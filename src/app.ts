@@ -4,6 +4,8 @@ import { authRouter } from './auth/auth.router'
 import { errorHandler } from './errors/errorHandler'
 import { PORT } from './config'
 import { IUserModel } from './interfaces/users/IUserModel'
+import cookieParser from 'cookie-parser'
+
 
 export const createApp = ({ userModel }: { userModel: IUserModel }): Application => {
   const app = express()
@@ -11,6 +13,8 @@ export const createApp = ({ userModel }: { userModel: IUserModel }): Application
   app.set('port', PORT)
 
   app.use(express.json())
+
+  app.use(cookieParser())
 
   app.use('/api/users', createUserRouter({ userModel }))
 
