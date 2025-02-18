@@ -10,7 +10,7 @@ export type ValidateUserAuth = z.infer<typeof UserAuth>
 
 const validateShcema = <T>(schema: z.ZodSchema<T>, input: unknown): T => {
   const result = schema.safeParse(input)
-  if (!result.success) throw new ValidationError(`${result.error.errors.map(err => err.message).join(', ')}`)
+  if (!result.success) throw new ValidationError(`required: ${result.error.errors.map(err => err.path).join(', ')}`)
   return result.data
 }
 
