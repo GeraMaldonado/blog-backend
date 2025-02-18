@@ -17,6 +17,7 @@ export const errorHandler = (err: any, _req: Request, res: Response, _next: Next
   }
   if (err instanceof UnauthorizedError) {
     res.status(401).json({ type: err.name, message: err.message })
+    return
   }
 
   res.status(500).json({ type: 'InternalServerError', message: 'Something went wrong' })
