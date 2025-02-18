@@ -49,7 +49,7 @@ describe('User Endopints', () => {
       const newUser = { ...user, name: '' }
       const response = await request(app).post(url).send(newUser)
       expect(response.status).toBe(400)
-      expect(response.body).toEqual({ type: 'ValidationError', message: 'name is required' })
+      expect(response.body).toEqual({ type: 'ValidationError', message: 'required: name' })
     })
   })
 
