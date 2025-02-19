@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  db-test:
+    image: mysql:8
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: testdb
+      MYSQL_USER: testuser
+      MYSQL_PASSWORD: testpassword
+    ports:
+      - "3307:3306" 
+    volumes:
+      - db-test-data:/var/lib/mysql
+
+volumes:
+  db-test-data:
