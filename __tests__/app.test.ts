@@ -1,12 +1,13 @@
 import request from 'supertest'
 import { createApp } from '../src/app'
-import { UserModelTest } from './users/users.model'
 import { UserDTO } from '../src/users/dtos/users.dto'
+import { UserModel } from '../src/users/users.model'
 
-const app = createApp({ userModel: UserModelTest })
+const app = createApp({ userModel: UserModel })
 const url: string = '/api/users'
 const user = { name: 'Gerardo Maldonado', password: 'passwordSeguro123', email: 'gmaldonadofelix@gmail.com', username: 'tHOwl953' }
 let id: string
+let authToken: string
 
 describe('User Endopints', () => {
   describe('GET All users', () => {
@@ -30,12 +31,11 @@ describe('User Endopints', () => {
       expect(response.status).toBe(201)
       expect(typeof response.body.result).toBe('string')
     })
-
     it(`POST ${url} should fail for repeated user`, async () => {
       const newUser = { ...user, email: 'gmaldonadofelix@hotmail.com', username: 'MadMax' }
       const response = await request(app).post(url).send(newUser)
       expect(response.status).toBe(409)
-      expect(response.body).toEqual({ type: 'ConflictError', message: 'username already is use' })
+      expect(response.body).toEqual({ type: 'ConflictError', message: 'username already in use' })
     })
 
     it(`POST ${url} should fail for repeated email`, async () => {
@@ -52,7 +52,6 @@ describe('User Endopints', () => {
       expect(response.body).toEqual({ type: 'ValidationError', message: 'required: name' })
     })
   })
-
   describe('GET user by id', () => {
     it(`GET ${url}/:id should return a user by id`, async () => {
       const response = await request(app).get(`${url}/${id}`)
@@ -70,9 +69,21 @@ describe('User Endopints', () => {
   })
 
   describe('PATCH user by id', () => {
+    beforeAll(async () => {
+      const loginResponse = await request(app)
+        .post('/api/auth/login')
+        .send({ email: user.email, password: user.password })
+
+      const cookies = Array.isArray(loginResponse.header['set-cookie'])
+        ? loginResponse.header['set-cookie']
+        : [loginResponse.header['set-cookie'] || '']
+
+      authToken = cookies.find((cookie: string) => cookie.includes('access_token')) || ''
+    })
+
     it(`PATCH ${url}/:id should modify the user`, async () => {
       const oldUser = await request(app).get(`${url}/${id}`)
-      const response = await request(app).patch(`${url}/${id}`).send({ name: 'Gerardo' })
+      const response = await request(app).patch(`${url}/${id}`).set('Cookie', authToken).send({ name: 'Gerardo' })
       const modifiedUser = await request(app).get(`${url}/${id}`)
       expect(response.status).toBe(200)
       expect(modifiedUser.body.result.username).toBe(oldUser.body.result.username)
@@ -82,35 +93,36 @@ describe('User Endopints', () => {
     })
 
     it(`PATCH ${url}/:id should fail for repeated user`, async () => {
-      const response = await request(app).patch(`${url}/${id}`).send({ username: 'MadMax' })
+      const response = await request(app).patch(`${url}/${id}`).set('Cookie', authToken).send({ username: 'MadMax' })
       expect(response.status).toBe(409)
-      expect(response.body).toEqual({ type: 'ConflictError', message: 'username already is use' })
+      expect(response.body).toEqual({ type: 'ConflictError', message: 'username already in use' })
     })
 
     it(`PATCH ${url}/:id should fail for repeated email`, async () => {
-      const response = await request(app).patch(`${url}/${id}`).send({ email: 'mrockatansky@email.com' })
+      const response = await request(app).patch(`${url}/${id}`).set('Cookie', authToken).send({ email: 'mrockatansky@email.com' })
       expect(response.status).toBe(409)
       expect(response.body).toEqual({ type: 'ConflictError', message: 'email already in use' })
     })
 
     it(`PATCH ${url}/:id should fail for field empty`, async () => {
-      const response = await request(app).patch(`${url}/${id}`).send({ email: ' ' })
+      const response = await request(app).patch(`${url}/${id}`).set('Cookie', authToken).send({ email: ' ' })
       expect(response.status).toBe(400)
-      expect(response.body).toEqual({ type: 'ValidationError', message: 'invalid email format' })
+      expect(response.body).toEqual({ type: 'ValidationError', message: 'required: email' })
     })
   })
 
   describe('DELETE user by id', () => {
     it(`DELETE ${url}/: should deleted the user`, async () => {
-      const response = await request(app).delete(`${url}/${id}`)
+      const response = await request(app).delete(`${url}/${id}`).set('Cookie', authToken)
       const userDeleted = await request(app).get(`${url}/${id}`)
       expect(response.status).toBe(200)
       expect(userDeleted.body).toEqual({ type: 'NotFoundError', message: 'user not found' })
     })
     it(`DELETE ${url}/: should fail for non-existent id`, async () => {
-      const response = await request(app).delete(`${url}/45`)
-      expect(response.status).toBe(404)
-      expect(response.body).toEqual({ type: 'NotFoundError', message: 'user not found' })
+      id = '481841fdg54fd8g61df35g1df8g1fd3g1fdg6df1g3d5fg153fdg12fd53gdf'
+      const response = await request(app).delete(`${url}/${id}`).set('Cookie', authToken)
+      expect(response.status).toBe(403)
+      expect(response.body).toEqual({ type: 'ForbiddenError', message: 'You do not have permission to modify this resource' })
     })
   })
 })
