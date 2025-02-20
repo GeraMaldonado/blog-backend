@@ -2,8 +2,9 @@ import request from 'supertest'
 import { createApp } from '../src/app'
 import { UserDTO } from '../src/users/dtos/users.dto'
 import { UserModel } from '../src/users/users.model'
+import {AuthModel} from '../src/auth/auth.model'
 
-const app = createApp({ userModel: UserModel })
+const app = createApp({ userModel: UserModel, authModel: AuthModel })
 const url: string = '/api/users'
 const user = { name: 'Gerardo Maldonado', password: 'passwordSeguro123', email: 'gmaldonadofelix@gmail.com', username: 'tHOwl953' }
 let id: string

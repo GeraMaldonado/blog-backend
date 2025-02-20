@@ -1,14 +1,20 @@
 import { Request, Response } from 'express'
 import { validateUserAuth } from './auth.validations'
-import { AuthModel } from './auth.model'
 import { generateAccessToken, generateRefreshToken, verifyRefreshToken } from './auth.service'
 import { UnauthorizedError } from '../errors/customizedError'
 import { UserAuthDTO } from './dtos/auth.dto'
+import { IAuthModel } from '../interfaces/auth/IAuthModel'
 
 export class AuthController {
+  private readonly authModel: IAuthModel
+
+  constructor ({ authModel }: { authModel: IAuthModel }) {
+    this.authModel = authModel
+  }
+
   login = async (req: Request, res: Response): Promise<void> => {
     const { email, password } = validateUserAuth(req.body)
-    const userAuth: UserAuthDTO = await AuthModel.authenticateUser({ email, password })
+    const userAuth: UserAuthDTO = await this.authModel.authenticateUser({ email, password })
     if (!userAuth) throw new UnauthorizedError('Invalid email or password')
 
     const accessToken = await generateAccessToken(userAuth)
