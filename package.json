@@ -6,8 +6,10 @@
     "start": "node .",
     "build": "tsc",
     "dev": "ts-node-dev --respawn src/index.ts",
-    "test": "jest",
-    "lint": "ts-standard"
+    "test": "DATABASE_URL_TEST=mysql://root:root@localhost:3307/testdb jest",
+    "lint": "ts-standard",
+    "migrate": "npx prisma migrate dev",
+    "migrate:test": "npx prisma migrate dev --schema=./prisma/schema.test.prisma"
   },
   "keywords": [],
   "author": "",
