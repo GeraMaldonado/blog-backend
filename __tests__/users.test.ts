@@ -70,13 +70,8 @@ describe('User Endopints', () => {
 
   describe('PATCH user by id', () => {
     beforeAll(async () => {
-      const loginResponse = await request(app)
-        .post('/api/auth/login')
-        .send({ email: user.email, password: user.password })
-
-      const cookies = Array.isArray(loginResponse.header['set-cookie'])
-        ? loginResponse.header['set-cookie']
-        : [loginResponse.header['set-cookie'] || '']
+      const loginResponse = await request(app).post('/api/auth/login').send({ email: user.email, password: user.password })
+      const cookies = Array.isArray(loginResponse.header['set-cookie']) ? loginResponse.header['set-cookie'] : [loginResponse.header['set-cookie'] || '']
 
       authToken = cookies.find((cookie: string) => cookie.includes('access_token')) || ''
     })
@@ -90,6 +85,19 @@ describe('User Endopints', () => {
       expect(modifiedUser.body.result.id).toBe(oldUser.body.result.id)
       expect(modifiedUser.body.result.name).not.toBe(oldUser.body.result.name)
       expect(modifiedUser.body.result.email).toBe(oldUser.body.result.email)
+    })
+
+    it(`PATCH ${url}/:id should fail for not having authentication`, async () => {
+      const response = await request(app).patch(`${url}/${id}`).send({ email: 'gmaldonadofelix@hotmail.com' })
+      expect(response.status).toBe(401)
+      expect(response.body).toEqual({ type: 'UnauthorizedError', message: 'Token not provided' })
+    })
+
+    it(`PATCH ${url}/:id should fail due to auth mismatch`, async () => {
+      const oterID = 'otherID'
+      const response = await request(app).patch(`${url}/${oterID}`).set('Cookie', authToken).send({ email: 'gmaldonadofelix@hotmail.com' })
+      expect(response.status).toBe(403)
+      expect(response.body).toEqual({ type: 'ForbiddenError', message: 'You do not have permission to modify this resource' })
     })
 
     it(`PATCH ${url}/:id should fail for repeated user`, async () => {
@@ -118,8 +126,15 @@ describe('User Endopints', () => {
       expect(response.status).toBe(200)
       expect(userDeleted.body).toEqual({ type: 'NotFoundError', message: 'user not found' })
     })
+
+    it(`DELETE ${url}/:id should fail for not having authentication`, async () => {
+      const response = await request(app).delete(`${url}/${id}`)
+      expect(response.status).toBe(401)
+      expect(response.body).toEqual({ type: 'UnauthorizedError', message: 'Token not provided' })
+    })
+
     it(`DELETE ${url}/: should fail due to auth mismatch`, async () => {
-      id = '481841fdg54fd8g61df35g1df8g1fd3g1fdg6df1g3d5fg153fdg12fd53gdf'
+      id = 'otherID'
       const response = await request(app).delete(`${url}/${id}`).set('Cookie', authToken)
       expect(response.status).toBe(403)
       expect(response.body).toEqual({ type: 'ForbiddenError', message: 'You do not have permission to modify this resource' })
