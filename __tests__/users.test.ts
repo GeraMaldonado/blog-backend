@@ -118,7 +118,7 @@ describe('User Endopints', () => {
       expect(response.status).toBe(200)
       expect(userDeleted.body).toEqual({ type: 'NotFoundError', message: 'user not found' })
     })
-    it(`DELETE ${url}/: should fail for non-existent id`, async () => {
+    it(`DELETE ${url}/: should fail due to auth mismatch`, async () => {
       id = '481841fdg54fd8g61df35g1df8g1fd3g1fdg6df1g3d5fg153fdg12fd53gdf'
       const response = await request(app).delete(`${url}/${id}`).set('Cookie', authToken)
       expect(response.status).toBe(403)
