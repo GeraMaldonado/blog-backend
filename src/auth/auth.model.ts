@@ -3,8 +3,15 @@ import { encryptCompare } from '../utils'
 import { NotFoundError, UnauthorizedError } from '../errors/customizedError'
 import { AuthDTO, UserAuthDTO } from './dtos/auth.dto'
 import { IAuthModel } from '../interfaces/auth/IAuthModel'
+import { NODE_ENV, DATABASE_URL, DATABASE_URL_TEST } from '../config'
 
-const prisma = new PrismaClient()
+const prisma = new PrismaClient({
+  datasources: {
+    db: {
+      url: NODE_ENV === 'test' ? DATABASE_URL_TEST : DATABASE_URL
+    }
+  }
+})
 
 export const AuthModel: IAuthModel = {
   async authenticateUser ({ email, password }: AuthDTO): Promise<UserAuthDTO> {
