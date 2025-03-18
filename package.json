@@ -6,10 +6,10 @@
     "start": "node .",
     "build": "tsc",
     "dev": "ts-node-dev --respawn src/index.ts",
-    "test": "DATABASE_URL_TEST=mysql://root:root@localhost:3307/testdb jest",
+    "test": "NODE_ENV=test jest",
     "lint": "ts-standard",
     "migrate": "npx prisma migrate dev",
-    "migrate:test": "npx prisma migrate dev --schema=./prisma/schema.test.prisma"
+    "migrate:test": "DATABASE_URL=mysql://root:root@localhost:3308/testdb prisma migrate dev --skip-generate && ts-node-dev ./prisma/seed.ts"
   },
   "keywords": [],
   "author": "",
