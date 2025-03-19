@@ -1,0 +1,35 @@
+services:
+  db:
+    image: mysql:8
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: blog
+      MYSQL_USER: blogUser
+      MYSQL_PASSWORD: blogPassword
+    networks:
+      - backend-network
+    volumes:
+      - db-data:/var/lib/mysql
+
+  backend:
+    image: blog-backend
+    build: .
+    restart: always
+    depends_on:
+      - db
+    command: sh -c "npm run migrate deploy && npm start"
+    environment:
+      DATABASE_URL: mysql://root:root@db:3306/blog
+      NODE_ENV: production
+    ports:
+      - 3010:3000
+    networks:
+      - backend-network
+
+volumes:
+  db-data:
+
+networks:
+  backend-network:
+    driver: bridge
