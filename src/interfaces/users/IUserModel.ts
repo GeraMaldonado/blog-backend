@@ -1,4 +1,4 @@
-import { CreateUserDTO, UserDTO, UpdateUserDTO } from './dtos/users.dto'
+import { CreateUserDTO, UserDTO, UpdateUserDTO } from '../../users/dtos/users.dto'
 
 export interface IUserModel {
   getAllUsers: () => Promise<UserDTO[]>
