@@ -1,8 +1,10 @@
 import { Request, Response, NextFunction } from 'express'
 import { ConflictError, ForbiddenError, NotFoundError, UnauthorizedError, ValidationError } from '../errors/customizedError'
+import { NODE_ENV } from '../config'
 
 export const errorHandler = (err: any, _req: Request, res: Response, _next: NextFunction): void => {
-//  console.error(err.name, ': ', err.message)
+  if (NODE_ENV !== 'test') console.error(err.name, ': ', err.message)
+
   if (err instanceof ValidationError) {
     res.status(400).json({ type: err.name, message: err.message })
     return
