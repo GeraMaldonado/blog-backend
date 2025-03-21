@@ -18,7 +18,7 @@ describe('Auth Endpoints', () => {
     it(`POST ${url}/login should authenticate a user `, async () => {
       const response = await request(app).post(`${url}/login`).send({ email: 'mrockatansky@email.com', password: 'password123' })
       expect(response.status).toBe(200)
-      expect(response.body).toEqual({ message: 'Login successful' })
+      expect(response.body.message).toBe('Login successful')
       expect(response.headers['set-cookie']).toBeDefined()
       refreshToken = Array.isArray(response.header['set-cookie'])
         ? response.header['set-cookie'].find((cookie) => cookie.includes('refresh_token'))

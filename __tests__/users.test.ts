@@ -15,8 +15,8 @@ describe('User Endopints', () => {
     it(`GET ${url} should return a list of users`, async () => {
       const response = await request(app).get(url)
       expect(response.status).toBe(200)
-      expect(Array.isArray(response.body)).toBe(true)
-      response.body.forEach((user: UserDTO) => {
+      expect(Array.isArray(response.body.data)).toBe(true)
+      response.body.data.forEach((user: UserDTO) => {
         expect(user).toHaveProperty('username')
         expect(user).not.toHaveProperty('password')
         expect(user).toHaveProperty('email')
@@ -28,9 +28,9 @@ describe('User Endopints', () => {
     it(`POST ${url} should create a user`, async () => {
       const newUser = { ...user }
       const response = await request(app).post(url).send(newUser)
-      id = response.body.result
+      id = response.body.data
       expect(response.status).toBe(201)
-      expect(typeof response.body.result).toBe('string')
+      expect(typeof response.body.data).toBe('string')
     })
     it(`POST ${url} should fail for repeated user`, async () => {
       const newUser = { ...user, email: 'gmaldonadofelix@hotmail.com', username: 'MadMax' }
@@ -57,9 +57,9 @@ describe('User Endopints', () => {
     it(`GET ${url}/:id should return a user by id`, async () => {
       const response = await request(app).get(`${url}/${id}`)
       expect(response.status).toBe(200)
-      expect(response.body.result).toHaveProperty('username')
-      expect(response.body.result).toHaveProperty('email')
-      expect(response.body.result).not.toHaveProperty('password')
+      expect(response.body.data).toHaveProperty('username')
+      expect(response.body.data).toHaveProperty('email')
+      expect(response.body.data).not.toHaveProperty('password')
     })
 
     it(`GET ${url}/:id should fail for non-existent id`, async () => {
@@ -82,10 +82,10 @@ describe('User Endopints', () => {
       const response = await request(app).patch(`${url}/${id}`).set('Cookie', authToken).send({ name: 'Gerardo' })
       const modifiedUser = await request(app).get(`${url}/${id}`)
       expect(response.status).toBe(200)
-      expect(modifiedUser.body.result.username).toBe(oldUser.body.result.username)
-      expect(modifiedUser.body.result.id).toBe(oldUser.body.result.id)
-      expect(modifiedUser.body.result.name).not.toBe(oldUser.body.result.name)
-      expect(modifiedUser.body.result.email).toBe(oldUser.body.result.email)
+      expect(modifiedUser.body.data.username).toBe(oldUser.body.data.username)
+      expect(modifiedUser.body.data.id).toBe(oldUser.body.data.id)
+      expect(modifiedUser.body.data.name).not.toBe(oldUser.body.data.name)
+      expect(modifiedUser.body.data.email).toBe(oldUser.body.data.email)
     })
 
     it(`PATCH ${url}/:id should fail for not having authentication`, async () => {
