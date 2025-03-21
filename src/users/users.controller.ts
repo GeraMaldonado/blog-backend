@@ -12,31 +12,31 @@ export class UserController {
 
   getAllUsers = async (_req: Request, res: Response): Promise<void> => {
     const users: UserDTO[] = await this.userModel.getAllUsers()
-    res.json(users)
+    res.json({ data: users })
   }
 
   createUser = async (req: Request, res: Response): Promise<void> => {
     const { name, username, password, email } = validateUser(req.body)
     const result = await this.userModel.createUser({ name, username, password, email })
-    res.status(201).json({ result })
+    res.status(201).json({ data: result })
   }
 
   getUserById = async (req: Request, res: Response): Promise<void> => {
     const { id } = req.params
     const result = await this.userModel.getUserById(id)
-    res.json({ result })
+    res.json({ data: result })
   }
 
   updateUserById = async (req: Request, res: Response): Promise<void> => {
     const { id } = req.params
     const updateData = validatePatialUser(req.body)
     const result = await this.userModel.updateUserById(id, updateData)
-    res.json({ result })
+    res.json({ data: result })
   }
 
   deleteUserById = async (req: Request, res: Response): Promise<void> => {
     const { id } = req.params
     const deleteUser = await this.userModel.deleteUserById(id)
-    res.json({ deleteUser })
+    res.json({ data: deleteUser })
   }
 }

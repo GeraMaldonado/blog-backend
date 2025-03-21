@@ -34,7 +34,7 @@ export class AuthController {
       maxAge: 1000 * 60 * 60 * 24 * 7
     })
 
-    res.status(200).json({ message: 'Login successful' })
+    res.status(200).json({ message: 'Login successful', data: userAuth })
   }
 
   refreshToken = async (req: Request, res: Response): Promise<void> => {
