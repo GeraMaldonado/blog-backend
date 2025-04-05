@@ -13,11 +13,11 @@ const transporter = nodemailer.createTransport({
 
 export async function sendEmail (to: string, subject: string, html: string): Promise<nodemailer.SentMessageInfo> {
   const mailOptions = {
-    from: `"Tu App" <${EMAIL_SERVER}>`,
+    from: `"Foro Personal" <${EMAIL_SERVER}>`,
     to,
     subject,
     html
   }
 
-  return transporter.sendMail(mailOptions)
+  return await transporter.sendMail(mailOptions)
 }
