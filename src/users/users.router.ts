@@ -11,6 +11,7 @@ export const createUserRouter = ({ userModel }: { userModel: IUserModel }): Rout
   const userController = new UserController({ userModel })
 
   usersRouter.get('/', userController.getAllUsers)
+  usersRouter.post('/verify-request', asyncHandler(userController.requestUserVerification))
   usersRouter.post('/', asyncHandler(userController.createUser))
   usersRouter.get('/:id', asyncHandler(userController.getUserById))
   usersRouter.patch('/:id', authMiddleware, protectRoutes, asyncHandler(userController.updateUserById))
