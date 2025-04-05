@@ -8,5 +8,8 @@ export const {
   SECRET_REFRESH_JWT_KEY = 'SECRET_REFRESH_JWT_KEY',
   NODE_ENV = 'development',
   DATABASE_URL = '',
-  DATABASE_URL_TEST = ''
+  DATABASE_URL_TEST = '',
+  EMAIL_SERVER = '',
+  EMAIL_ADMIN = '',
+  EMAIL_PASSWORD = ''
 } = process.env
