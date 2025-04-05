@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express'
-import { ConflictError, ForbiddenError, NotFoundError, UnauthorizedError, ValidationError } from '../errors/customizedError'
+import { ConflictError, ForbiddenError, InvalidCodeError, NotFoundError, UnauthorizedError, ValidationError } from '../errors/customizedError'
 import { NODE_ENV } from '../config'
 
 export const errorHandler = (err: any, _req: Request, res: Response, _next: NextFunction): void => {
@@ -23,6 +23,10 @@ export const errorHandler = (err: any, _req: Request, res: Response, _next: Next
   }
   if (err instanceof ForbiddenError) {
     res.status(403).json({ type: err.name, message: err.message })
+    return
+  }
+  if (err instanceof InvalidCodeError) {
+    res.status(400).json({ type: err.name, message: err.message })
     return
   }
 
