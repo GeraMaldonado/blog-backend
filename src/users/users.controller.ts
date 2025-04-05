@@ -1,7 +1,8 @@
 import { Request, Response } from 'express'
 import { UserDTO } from './dtos/users.dto'
-import { validateUser, validatePatialUser } from './users.validations'
+import { validateUser, validatePartialUser, validateUserVerificationRequest } from './users.validations'
 import { IUserModel } from '../interfaces/users/IUserModel'
+import { requestVerificationCode, verifyCodeAndGetData } from '../services/userVerification.service'
 
 export class UserController {
   private readonly userModel: IUserModel
@@ -15,8 +16,15 @@ export class UserController {
     res.json({ data: users })
   }
 
+  requestUserVerification = async (req: Request, res: Response): Promise<void> => {
+    const { name, email } = validateUserVerificationRequest(req.body)
+    await requestVerificationCode({ name, email })
+    res.json({ message: 'Código de verificacion nviado al correo' })
+  }
+
   createUser = async (req: Request, res: Response): Promise<void> => {
-    const { name, username, password, email } = validateUser(req.body)
+    const { name, username, password, email, code } = validateUser(req.body)
+    verifyCodeAndGetData({ email, code })
     const result = await this.userModel.createUser({ name, username, password, email })
     res.status(201).json({ data: result })
   }
@@ -29,7 +37,7 @@ export class UserController {
 
   updateUserById = async (req: Request, res: Response): Promise<void> => {
     const { id } = req.params
-    const updateData = validatePatialUser(req.body)
+    const updateData = validatePartialUser(req.body)
     const result = await this.userModel.updateUserById(id, updateData)
     res.json({ data: result })
   }
