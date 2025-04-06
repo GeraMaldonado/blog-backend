@@ -22,6 +22,8 @@ services:
     environment:
       DATABASE_URL: mysql://root:root@db:3306/blog
       NODE_ENV: production
+    env_file:
+      - .env.production
     ports:
       - 3010:3000
     networks:
