@@ -6,7 +6,7 @@ import {AuthModel} from '../src/auth/auth.model'
 
 const app = createApp({ userModel: UserModel, authModel: AuthModel })
 const url: string = '/api/users'
-const user = { name: 'Gerardo Maldonado', password: 'passwordSeguro123', email: 'gmaldonadofelix@gmail.com', username: 'tHOwl953' }
+const user = { name: 'Gerardo Maldonado', password: 'passwordSeguro123', email: 'gmaldonadofelix@gmail.com', username: 'tHOwl953', code: '123456' }
 let id: string
 let authToken: string
 
@@ -24,23 +24,36 @@ describe('User Endopints', () => {
     })
   })
 
+  describe('POST verify-request', () => {
+  it('should send a verification code', async () => {
+    const response = await request(app).post(`${url}/verify-request`).send({ name: user.name, email: user.email })
+    expect(response.status).toBe(200)
+    expect(response.body.message).toMatch(/código/i)
+  })
+})
+
   describe('POST user', () => {
-    it(`POST ${url} should create a user`, async () => {
-      const newUser = { ...user }
-      const response = await request(app).post(url).send(newUser)
+    beforeEach(async () => {
+      await request(app).post(`${url}/verify-request`).send({ name: user.name, email: user.email })
+    })
+
+    it('should create user after verification code', async () => {
+      const response = await request(app).post(url).send({ ...user })
       id = response.body.data
       expect(response.status).toBe(201)
       expect(typeof response.body.data).toBe('string')
     })
     it(`POST ${url} should fail for repeated user`, async () => {
       const newUser = { ...user, email: 'gmaldonadofelix@hotmail.com', username: 'MadMax' }
+      await request(app).post(`${url}/verify-request`).send({ name: newUser.name, email: newUser.email })
       const response = await request(app).post(url).send(newUser)
+      console.log(response.body)
       expect(response.status).toBe(409)
       expect(response.body).toEqual({ type: 'ConflictError', message: 'username already in use' })
     })
 
     it(`POST ${url} should fail for repeated email`, async () => {
-      const newUser = { ...user, username: 'Owl' }
+      const newUser = { ...user, username: 'Owl', code: '123456' }
       const response = await request(app).post(url).send(newUser)
       expect(response.status).toBe(409)
       expect(response.body).toEqual({ type: 'ConflictError', message: 'email already in use' })
@@ -50,7 +63,7 @@ describe('User Endopints', () => {
       const newUser = { ...user, name: '' }
       const response = await request(app).post(url).send(newUser)
       expect(response.status).toBe(400)
-      expect(response.body).toEqual({ type: 'ValidationError', message: 'required: name' })
+      expect(response.body).toEqual({ type: 'ValidationError', message: "required: name" })
     })
   })
   describe('GET user by id', () => {
