@@ -1,18 +1,9 @@
-import { PrismaClient } from '@prisma/client'
+import { prisma } from '../model/database'
 import { randomUUID } from 'node:crypto'
 import { CreateUserDTO, UserDTO, UpdateUserDTO } from './dtos/users.dto'
 import { ConflictError, NotFoundError } from '../errors/customizedError'
 import { encryptPassword } from '../utils'
 import { IUserModel } from '../interfaces/users/IUserModel'
-import { NODE_ENV, DATABASE_URL, DATABASE_URL_TEST } from '../config'
-
-const prisma = new PrismaClient({
-  datasources: {
-    db: {
-      url: NODE_ENV === 'test' ? DATABASE_URL_TEST : DATABASE_URL
-    }
-  }
-})
 
 export const UserModel: IUserModel = {
   async validateUserExistance (id: string): Promise<void> {
