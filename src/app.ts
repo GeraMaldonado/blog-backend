@@ -6,8 +6,9 @@ import cookieParser from 'cookie-parser'
 import { IAuthModel } from './interfaces/auth/IAuthModel'
 import cors from 'cors'
 import { createRouter } from './router/router'
+import { IPostModel } from './interfaces/posts/IPostModel'
 
-export const createApp = ({ userModel, authModel }: { userModel: IUserModel, authModel: IAuthModel }): Application => {
+export const createApp = ({ userModel, authModel, postModel }: { userModel: IUserModel, authModel: IAuthModel, postModel: IPostModel }): Application => {
   const app = express()
 
   app.set('port', PORT)
@@ -17,7 +18,7 @@ export const createApp = ({ userModel, authModel }: { userModel: IUserModel, aut
 
   app.use(cookieParser())
 
-  app.use('/api', createRouter({ userModel, authModel }))
+  app.use('/api', createRouter({ userModel, authModel, postModel }))
 
   app.use(errorHandler)
 
