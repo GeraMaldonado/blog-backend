@@ -22,7 +22,8 @@ export const PostModel: IPostModel = {
     await prisma.post.create({
       data: {
         id,
-        ...newPost,
+        title: newPost.title,
+        authorId: newPost.authorId,
         content: newPost.content ?? null,
         categoryId: newPost.categoryId ?? null
       }
