@@ -10,7 +10,7 @@ export const createUserRouter = ({ userModel }: { userModel: IUserModel }): Rout
 
   const userController = new UserController({ userModel })
 
-  usersRouter.get('/', userController.getAllUsers)
+  usersRouter.get('/', asyncHandler(userController.getAllUsers))
   usersRouter.post('/verify-request', asyncHandler(userController.requestUserVerification))
   usersRouter.post('/', asyncHandler(userController.createUser))
   usersRouter.get('/:id', asyncHandler(userController.getUserById))
