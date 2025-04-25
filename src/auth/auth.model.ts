@@ -1,4 +1,4 @@
-import { prisma } from '../model/database'
+import { prisma } from '../database/mysql'
 import { encryptCompare } from '../utils'
 import { NotFoundError, UnauthorizedError } from '../errors/customizedError'
 import { AuthDTO, UserAuthDTO } from './dtos/auth.dto'

@@ -1,5 +1,5 @@
 import { IPostModel } from '@/interfaces/posts/IPostModel'
-import { prisma } from '../model/database'
+import { prisma } from '../database/mysql'
 import { PostDTO, CreatePostDTO, UpdatePostDTO } from './dto/posts.dto'
 import { randomUUID } from 'node:crypto'
 

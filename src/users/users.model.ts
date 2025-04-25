@@ -1,4 +1,4 @@
-import { prisma } from '../model/database'
+import { prisma } from '../database/mysql'
 import { randomUUID } from 'node:crypto'
 import { CreateUserDTO, UserDTO, UpdateUserDTO } from './dtos/users.dto'
 import { ConflictError, NotFoundError } from '../errors/customizedError'
