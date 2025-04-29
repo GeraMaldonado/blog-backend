@@ -11,5 +11,6 @@ export const {
   DATABASE_URL_TEST = '',
   EMAIL_SERVER = '',
   EMAIL_ADMIN = '',
-  EMAIL_PASSWORD = ''
+  EMAIL_PASSWORD = '',
+  MONGO_URI = ''
 } = process.env
