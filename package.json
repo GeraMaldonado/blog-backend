@@ -6,6 +6,7 @@
     "start": "node .",
     "build": "tsc",
     "dev": "ts-node-dev --respawn src/index.ts",
+    "dev:mongo": "DB_TYPE=mongo ts-node-dev --respawn src/index.ts",
     "test": "NODE_ENV=test jest",
     "lint": "ts-standard",
     "migrate": "npx prisma migrate dev",
@@ -42,6 +43,7 @@
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.13.3",
     "node-cache": "^5.1.2",
     "nodemailer": "^6.10.0",
     "zod": "^3.24.1"
