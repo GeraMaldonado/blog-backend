@@ -12,5 +12,6 @@ export const {
   EMAIL_SERVER = '',
   EMAIL_ADMIN = '',
   EMAIL_PASSWORD = '',
-  MONGO_URI = ''
+  MONGO_URI = '',
+  DB_TYPE = ''
 } = process.env
