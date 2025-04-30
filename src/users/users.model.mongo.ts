@@ -1,11 +1,10 @@
 import mongoose from 'mongoose'
+import { connectToMongo } from '../database/mongodb'
 import { IUserModel } from '../interfaces/users/IUserModel'
 import { UserDTO, CreateUserDTO } from '../users/dtos/users.dto'
 import { NotFoundError } from '../errors/customizedError'
-import { MONGO_URI } from '../config'
 
-// Tipo que representa un usuario en la base de datos
-type UserEntity = {
+export type UserEntity = {
   _id: mongoose.Types.ObjectId
   name: string
   username: string
@@ -14,14 +13,6 @@ type UserEntity = {
   creation_date: Date
 }
 
-// Función para conectar a Mongo
-const connectToMongo = async (): Promise<void> => {
-  if (mongoose.connection.readyState !== 1) {
-    await mongoose.connect(MONGO_URI, { authSource: 'admin' })
-  }
-}
-
-// Definición del esquema y modelo
 const userSchema = new mongoose.Schema<UserEntity>({
   name: { type: String, required: true },
   username: { type: String, required: true, unique: true },
@@ -30,9 +21,8 @@ const userSchema = new mongoose.Schema<UserEntity>({
   creation_date: { type: Date, default: Date.now }
 })
 
-const UserMongo = mongoose.models.User || mongoose.model<UserEntity>('User', userSchema)
+export const UserMongo = mongoose.models.User || mongoose.model<UserEntity>('User', userSchema)
 
-// Implementación del modelo
 export const UserModel: IUserModel = {
   async getAllUsers(): Promise<UserDTO[]> {
     await connectToMongo()
@@ -59,7 +49,6 @@ export const UserModel: IUserModel = {
     }
   },
 
-  // 🔥 ESTE FALTABA:
   async createUser(newUser: CreateUserDTO): Promise<string> {
     await connectToMongo()
     const user = await UserMongo.create(newUser)
