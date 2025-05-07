@@ -6,7 +6,7 @@ import { UserModel as PrismaUserModel } from './users/users.model'
 
 import { AuthModel as MongoAuthModel } from './auth/auth.model.mongo'
 import { PostModel as MongoPostModel } from './posts/posts.model.mongo'
-import { UserModel as MongoUserModel} from './users/users.model.mongo'
+import { UserModel as MongoUserModel } from './users/users.model.mongo'
 
 const app = createApp({
   userModel: DB_TYPE === 'mongo' ? MongoUserModel : PrismaUserModel,
