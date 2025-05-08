@@ -3,8 +3,9 @@ import { createApp } from '../src/app'
 import { UserDTO } from '../src/users/dtos/users.dto'
 import { UserModel } from '../src/users/users.model'
 import {AuthModel} from '../src/auth/auth.model'
+import { PostModel } from '../src/posts/posts.model'
 
-const app = createApp({ userModel: UserModel, authModel: AuthModel })
+const app = createApp({ postModel: PostModel, userModel: UserModel, authModel: AuthModel })
 const url: string = '/api/users'
 const user = { name: 'Gerardo Maldonado', password: 'passwordSeguro123', email: 'gmaldonadofelix@gmail.com', username: 'tHOwl953', code: '123456' }
 let id: string
@@ -47,7 +48,6 @@ describe('User Endopints', () => {
       const newUser = { ...user, email: 'gmaldonadofelix@hotmail.com', username: 'MadMax' }
       await request(app).post(`${url}/verify-request`).send({ name: newUser.name, email: newUser.email })
       const response = await request(app).post(url).send(newUser)
-      console.log(response.body)
       expect(response.status).toBe(409)
       expect(response.body).toEqual({ type: 'ConflictError', message: 'username already in use' })
     })
