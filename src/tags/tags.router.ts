@@ -1,12 +1,14 @@
 import { Router } from 'express'
 import { TagsController } from './tags.controller'
+import { asyncHandler } from '../errors/asyncHandler'
+import { authMiddleware } from '../auth/auth.middleware'
 
 export function createTagsRouter (): Router {
-  const router = Router()
+  const tagsRouter = Router()
   const tagsController = new TagsController()
 
-  router.get('/', tagsController.getAllTags)
-  router.post('/', tagsController.createTag)
+  tagsRouter.get('/', asyncHandler(tagsController.getAllTags))
+  tagsRouter.post('/', authMiddleware, asyncHandler(tagsController.createTag))
 
-  return router
+  return tagsRouter
 }
