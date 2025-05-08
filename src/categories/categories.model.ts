@@ -1,4 +1,4 @@
-import { ICategoriesModel } from '@/interfaces/categories/ICategoriesModel'
+import { ICategoriesModel } from '../interfaces/categories/ICategoriesModel'
 import { CategoryDTO, newCategoryDTO } from './dto/categories.dto'
 import { prisma } from '../database/mysql'
 import { randomUUID } from 'node:crypto'
