@@ -2,9 +2,10 @@ import request from 'supertest'
 import { createApp } from '../src/app'
 import { UserModel } from '../src/users/users.model'
 import { AuthModel } from '../src/auth/auth.model'
+import { PostModel } from '../src/posts/posts.model'
 
 const url = '/api/auth'
-const app = createApp({ userModel: UserModel, authModel: AuthModel })
+const app = createApp({ postModel: PostModel, userModel: UserModel, authModel: AuthModel })
 let refreshToken: string
 
 describe('Auth Endpoints', () => {
