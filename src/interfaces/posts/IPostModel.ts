@@ -1,4 +1,4 @@
-import { CreatePostDTO, PostDTO, UpdatePostDTO } from '@/posts/dto/posts.dto'
+import { CreatePostDTO, PostDTO, UpdatePostDTO } from '../../posts/dto/posts.dto'
 
 export interface IPostModel {
   getAllPost: (userid: string) => Promise<PostDTO[]>
