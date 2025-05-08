@@ -1,13 +1,14 @@
 import { Router } from 'express'
 import { CategoriesController } from './categories.controller'
 import { asyncHandler } from '../errors/asyncHandler'
+import { authMiddleware } from '../auth/auth.middleware'
 
 export function createCategoriesRouter (): Router {
-  const router = Router()
+  const categoriesRouter = Router()
   const categoriesController = new CategoriesController()
 
-  router.get('/', asyncHandler(categoriesController.getAllCategories))
-  router.post('/', categoriesController.createCategory)
+  categoriesRouter.get('/', asyncHandler(categoriesController.getAllCategories))
+  categoriesRouter.post('/', authMiddleware, asyncHandler(categoriesController.createCategory))
 
-  return router
+  return categoriesRouter
 }
