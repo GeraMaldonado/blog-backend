@@ -1,4 +1,4 @@
-import { IPostModel } from '@/interfaces/posts/IPostModel'
+import { IPostModel } from '../interfaces/posts/IPostModel'
 import { prisma } from '../database/mysql'
 import { PostDTO, CreatePostDTO, UpdatePostDTO } from './dto/posts.dto'
 import { randomUUID } from 'node:crypto'
@@ -17,7 +17,6 @@ export const PostModel: IPostModel = {
   },
 
   async createPost (newPost: CreatePostDTO): Promise<string> {
-    console.log(newPost)
     const id: string = randomUUID()
     await prisma.post.create({
       data: {
