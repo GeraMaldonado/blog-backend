@@ -1,4 +1,4 @@
-import { IPostModel } from '@/interfaces/posts/IPostModel'
+import { IPostModel } from '../interfaces/posts/IPostModel'
 import { Response, Request } from 'express'
 import { validatePost, validatePartialPost } from './posts.validations'
 
