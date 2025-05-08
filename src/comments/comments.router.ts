@@ -1,12 +1,14 @@
 import { Router } from 'express'
 import { CommentsController } from './comments.controller'
+import { asyncHandler } from '../errors/asyncHandler'
+import { authMiddleware } from '../auth/auth.middleware'
 
 export function createCommentsRouter (): Router {
-  const router = Router()
+  const commentsRouter = Router()
   const commentsController = new CommentsController()
 
-  router.get('/', commentsController.getAllComments)
-  router.post('/', commentsController.createComment)
+  commentsRouter.get('/', asyncHandler(commentsController.getAllComments))
+  commentsRouter.post('/', authMiddleware, asyncHandler(commentsController.createComment))
 
-  return router
+  return commentsRouter
 }
