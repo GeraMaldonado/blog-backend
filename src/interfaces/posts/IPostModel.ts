@@ -6,4 +6,5 @@ export interface IPostModel {
   createPost: (newPost: CreatePostDTO) => Promise<string>
   updatePostById: (id: string, updateUser: UpdatePostDTO) => Promise<string>
   deletePostById: (id: string) => Promise<string>
+  validatePostExist: (id: string) => Promise<void>
 }
