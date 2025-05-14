@@ -23,6 +23,12 @@ type PostEntity = {
 const PostMongo = mongoose.models.Post || mongoose.model('Post', postSchema)
 
 export const PostModel: IPostModel = {
+
+  async validatePostExist (id: string): Promise<void> {
+    const post = await PostMongo.findById(id).lean<PostEntity>()
+    if (!post) throw new Error('Post no encontrado')
+  },
+
   async getAllPost(userid?: string): Promise<PostDTO[]> {
     await connectToMongo()
     const posts = await PostMongo.find(userid ? { authorId: userid } : {}).lean<PostEntity[]>()

@@ -35,7 +35,6 @@ describe('Comment Endpoints', () => {
         authorId: authorId,
         postId: '7720d22b-9a8c-4265-af5c-53dde5af12a5'
       })
-      console.log(res.body.message)
       commentId = res.body.data
       expect(res.status).toBe(201)
       expect(typeof commentId).toBe('string')
