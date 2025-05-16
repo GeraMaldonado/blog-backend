@@ -1,6 +1,6 @@
 import { IPostModel } from '../interfaces/posts/IPostModel'
 import { prisma } from '../database/mysql'
-import { PostDTO, CreatePostDTO, UpdatePostDTO } from './dto/posts.dto'
+import { PostDTO, CreatePostDTO, UpdatePostDTO, PopulatedPostDTO } from './dto/posts.dto'
 import { randomUUID } from 'node:crypto'
 import { NotFoundError } from '../errors/customizedError'
 
@@ -10,14 +10,44 @@ export const PostModel: IPostModel = {
     if (await prisma.post.findUnique({ where: { id } }) == null) throw new NotFoundError('post not found')
   },
 
-  async getAllPost (userid: string): Promise<PostDTO[]> {
-    const allPost = await prisma.post.findMany({ where: userid ? { authorId: userid } : undefined })
+  async getAllPost (userid: string): Promise<PopulatedPostDTO[]> {
+    const allPost = await prisma.post.findMany({
+      where: userid ? { authorId: userid } : undefined,
+      include: {
+        author: {
+          select: {
+            id: true,
+            name: true,
+            username: true
+          }
+        },
+        category: {
+          select: {
+            id: true,
+            name: true
+          }
+        },
+        tags: {
+          select: {
+            id: true,
+            name: true
+          }
+        }
+      }
+    })
     return allPost
   },
 
   async getPostById (id: string): Promise<PostDTO> {
     await this.validatePostExist(id)
-    const postByID = await prisma.post.findUnique({ where: { id } })
+    const postByID = await prisma.post.findUnique({
+      where: { id },
+      include: {
+        author: { select: { id: true, name: true, username: true } },
+        category: { select: { id: true, name: true } },
+        tags: { select: { id: true, name: true } }
+      }
+    })
     if (postByID == null) throw new Error('Post no encontrado')
     return postByID
   },
