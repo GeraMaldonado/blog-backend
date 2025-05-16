@@ -1,7 +1,7 @@
-import { CreatePostDTO, PostDTO, UpdatePostDTO } from '../../posts/dto/posts.dto'
+import { CreatePostDTO, PopulatedPostDTO, PostDTO, UpdatePostDTO } from '../../posts/dto/posts.dto'
 
 export interface IPostModel {
-  getAllPost: (userid: string) => Promise<PostDTO[]>
+  getAllPost: (userid: string) => Promise<PopulatedPostDTO[]>
   getPostById: (id: string) => Promise<PostDTO | null>
   createPost: (newPost: CreatePostDTO) => Promise<string>
   updatePostById: (id: string, updateUser: UpdatePostDTO) => Promise<string>
