@@ -1,14 +1,14 @@
 import mongoose from 'mongoose'
 import { IPostModel } from '../interfaces/posts/IPostModel'
-import { PostDTO, CreatePostDTO, UpdatePostDTO } from './dto/posts.dto'
+import { PostDTO, CreatePostDTO, UpdatePostDTO, PopulatedPostDTO } from './dto/posts.dto'
 import { connectToMongo } from '../database/mongodb'
 
 const postSchema = new mongoose.Schema({
   title: { type: String, required: true },
   content: { type: String, default: null },
   publishedAt: { type: Date, default: Date.now },
-  authorId: { type: String, required: true },
-  categoryId: { type: String, default: null }
+  authorId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  categoryId: { type: mongoose.Schema.Types.ObjectId, ref: 'Category', default: null }
 })
 
 type PostEntity = {
@@ -29,16 +29,26 @@ export const PostModel: IPostModel = {
     if (!post) throw new Error('Post no encontrado')
   },
 
-  async getAllPost(userid?: string): Promise<PostDTO[]> {
+  async getAllPost(userid?: string): Promise<PopulatedPostDTO[]> {
     await connectToMongo()
-    const posts = await PostMongo.find(userid ? { authorId: userid } : {}).lean<PostEntity[]>()
-    return posts.map((post) => ({
+    const posts = await PostMongo.find(userid ? { authorId: userid } : {}).populate('authorId', 'id name username').populate('categoryId', 'id name').lean()
+    return posts.map((post: any) => ({
       id: post._id.toString(),
       title: post.title,
       content: post.content ?? null,
       publishedAt: post.publishedAt,
-      authorId: post.authorId,
-      categoryId: post.categoryId ?? undefined
+      author: {
+        id: post.authorId._id.toString(),
+        name: post.authorId.name,
+        username: post.authorId.username
+      },
+      category: post.categoryId
+        ? {
+            id: post.categoryId._id.toString(),
+            name: post.categoryId.name
+          }
+        : null,
+      tags: []
     }))
   },
 
