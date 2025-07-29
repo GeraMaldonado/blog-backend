@@ -20,6 +20,7 @@ model User {
   email         String    @unique @db.VarChar(100)
   password      String
   creation_date DateTime  @default(now())
+  deletedAt     DateTime?
   posts         Post[]
   comments      Comment[]
 }
@@ -29,6 +30,7 @@ model Post {
   title       String    @db.VarChar(150)
   content     String?
   publishedAt DateTime  @default(now())
+  deletedAt   DateTime?
   author      User      @relation(fields: [authorId], references: [id])
   authorId    String
   category    Category? @relation(fields: [categoryId], references: [id])
@@ -48,6 +50,7 @@ model Comment {
   id        String   @id @default(uuid())
   content   String
   createdAt DateTime @default(now())
+  deletedAt DateTime?
   author    User     @relation(fields: [authorId], references: [id])
   authorId  String
   post      Post     @relation(fields: [postId], references: [id])
