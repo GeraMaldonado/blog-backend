@@ -47,20 +47,23 @@ docker compose -f docker-compose.prod.yml up --build -d
 
 4. Ejecutar tests
 
-4.1. Levanta la base de datos de prueba
-```bash
-docker compose -f docker-compose.test.yml up -d
-```
-4.2 Aplica migraciones y ejecuta el seed
-```bash
-npm run migrate:test
-```
+    - 4.1. Levanta la base de datos de prueba
 
-4.3 Ejecuta los tests
+        ```bash
+        docker compose -f docker-compose.test.yml up -d
+        ```
+    
+    - 4.2 Aplica migraciones y ejecuta el seed
 
-```bash
-npm test
-```
+        ```bash
+        npm run migrate:test
+        ```
+
+    - 4.3 Ejecuta los tests
+
+        ```bash
+        npm test
+        ```
 
 ## Scripts útiles
 |Script                 |   Descripción|
